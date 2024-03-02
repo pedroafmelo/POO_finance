@@ -61,6 +61,7 @@ class FrontEnd:
         st.dataframe(data)
 
     def hist_return(self):
+        pass
         
 
 

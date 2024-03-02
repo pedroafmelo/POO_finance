@@ -71,7 +71,7 @@ class InvestRecomend:
 
             dados = pd.read_html(str(table_content), 
                         thousands = ".", 
-                        decimal = ",")[0].to_csv(path.join(self.config.vars.df_dir), 
+                        decimal = ",")[0].to_csv(path.join(self.config.vars.data_dir), 
                                               thousands = ".", 
                                               decimal = ",",
                                               compression = "gzip")
@@ -92,7 +92,7 @@ class InvestRecomend:
                             index_col = "Papel")
                     .rename(columns = lambda x: x.lower())
                     .rename(columns = {"liq.2meses": "liq_2_meses", 
-                                   "ev/ebit": "ev_ebit"})
+                                       "ev/ebit": "ev_ebit"})
                     .assign(
                         roic = lambda x: x["roic"].str.replace(".", "")
                         .str.replace(",", ".").str.replace("%", "").astype(float),
