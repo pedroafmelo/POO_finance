@@ -30,7 +30,7 @@ class CompoundCalc:
         """Calculate the mountant after investment"""
         
         fee = fee / 100
-        months = [1]
+        months = [''.join([str(1),'º Mês'])]
         amounts = [initial_cont]
 
         if monthly_cont:
@@ -39,7 +39,7 @@ class CompoundCalc:
             for month in range(1, years * 12 + 1):
 
                 m = m * (1 + fee) + monthly_cont  # Compound interest formula
-                months.append(month)
+                months.append(''.join([str(month),'º Mês']))
                 amounts.append(m)
 
             ganho_com_juros = m - initial_cont
