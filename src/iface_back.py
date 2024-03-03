@@ -13,7 +13,8 @@ class CompoundCalc:
 
     def _init_(self,) -> int:
         """Initialize instance"""
-        pass
+        self.simulation = None
+        self.state = False
 
     def _repr_(self):
         """Basic instance representation"""
@@ -29,17 +30,27 @@ class CompoundCalc:
         """Calculate the mountant after investment"""
         
         fee = fee / 100
-
+        months = [1]
+        amounts = [initial_cont]
 
         if monthly_cont:
             m = initial_cont  # Initialize the total amount
 
-            for _ in range(1, years * 12 + 1):
+            for month in range(1, years * 12 + 1):
+
                 m = m * (1 + fee) + monthly_cont  # Compound interest formula
+                months.append(month)
+                amounts.append(m)
 
             ganho_com_juros = m - initial_cont
+            self.simulation = dict(zip(months, amounts))
+            self.state = True
 
         return ganho_com_juros
+    
+    def get_simulation(self) -> dict:
+        if self.state:
+            return self.simulation
     
 
 class InvestRecomend:
