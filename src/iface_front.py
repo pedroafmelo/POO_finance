@@ -62,9 +62,6 @@ class FrontEnd:
 
     def hist_return(self):
         pass
-        
-
-
 
     def main(self):
         self.basic_layout()
