@@ -170,7 +170,7 @@ class FrontEnd:
 
         c1, c2 = st.columns([4, 3])
 
-        row_data = _self.invest._extract_data()
+        _self.invest._extract_data()
 
         data = _self.invest._transform(_self.file_path)
 
@@ -227,10 +227,10 @@ class FrontEnd:
         
         c1, c2, c3 = st.columns([1,1,1])
 
-        industry_disp = company.info.get('industryDisp', 'Not available')
-
+        st.spinner("Loading...")
+        
         c1.write(f"Company: {company.info['longName']}")
-        c2.write(f"Market Area: {industry_disp}")
+        c2.write(f"Market Area: {company.info['industryDisp']}")
         c3.write(f"Current Price: {company.info['currentPrice']}BRL")
 
 

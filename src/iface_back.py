@@ -105,6 +105,7 @@ class InvestRecomend:
                                  encoding = "utf-8",
                                  thousands = ".", 
                                  decimal = ",")[0].to_csv(self.file_path,
+                                                          index = False,
                                                           compression = "gzip")
 
         except Exception as error:
@@ -118,7 +119,8 @@ class InvestRecomend:
 
         try:
             tickers = []
-            response = get(self.config.vars.tickers_url, headers={'User-Agent':random.choice(self.config._user_agent)})
+            response = get(self.config.vars.tickers_url, 
+                           headers={'User-Agent':random.choice(self.config._user_agent)})
 
 
             if not response.ok:
@@ -145,14 +147,12 @@ class InvestRecomend:
         """Transform companies data"""
 
         try:
-
+            
             dados = (
 
                 read_csv(filename, 
                          usecols = self.config.columns,
-                         encoding = "utf-8",
-                         thousands = ".", 
-                         decimal = ",",)
+                         encoding = "utf-8")
 
                 .rename(columns = lambda x: x.lower())
                 .rename(columns = {"liq.2meses": "liq_2_meses", 
@@ -163,17 +163,17 @@ class InvestRecomend:
                     roic = lambda x: x["roic"].str.replace(".", "")
                     .str.replace(",", ".").str.replace("%", "").astype(float),
                 )
-                .query("(roic > 0) and (ev_ebit > 0) and (liq_2_meses > 1000000)")
                 .assign(
-                    ranking_evebit = lambda x: x["ev_ebit"].rank(),
+                    ebit_ev = lambda x: x["ev_ebit"].apply(lambda y: 1/y if y != 0 else 0),
+                    ranking_evebit = lambda x: x["ebit_ev"].rank(ascending = False),
                     ranking_roic = lambda x: x["roic"].rank(ascending = False),
                     ranking_geral = lambda x: x["ranking_evebit"] + x["ranking_roic"],
                     ranking_final = lambda x: x["ranking_geral"].rank(),
                     ranking = lambda x: x["ranking_geral"].rank()
                 )
-                .drop(["ranking_evebit", "ranking_roic", "ranking_geral", "ranking_final"], axis = 1)
+                .drop(["ranking_evebit", "ranking_roic", "ranking_geral", "ranking_final", "ev_ebit"], axis = 1)
                 .sort_values("ranking")
-                .query("ranking <= @qt_asset + 1")
+                .query("ranking <= 10")
 
             )
 
