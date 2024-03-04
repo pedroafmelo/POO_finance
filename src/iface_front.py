@@ -174,8 +174,6 @@ class FrontEnd:
                           y = ["With Compound Interest", "Without Compound Interest"],
                           color = ["#FF0000", "#FF708E"])
             
- 
-            
 
     @st.cache_data
     def invest_rec(_self):
