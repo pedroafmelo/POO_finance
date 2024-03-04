@@ -9,14 +9,17 @@ class Variables:
     project_name: str
     project_icon: str
     data_dir: str
-    url: str
+    data_url: str
+    tickers_url: str
+    filename: str
+    logo: str
     extension: str
-    file_dir: str
 
 class Config:
 
     def __init__(self):
         
+        self.project_dir = abspath(dirname(dirname(__file__)))
         data = {}
         with open(
             join(dirname(abspath(__file__)), 'env.yaml'), encoding = 'utf-8'
@@ -26,12 +29,16 @@ class Config:
             project_name = data.get('project_name'),
             project_icon = data.get('project_icon'),
             data_dir = data.get('data_dir'),
-            url = data.get('url'),
+            data_url = data.get('data_url'),
+            tickers_url = data.get('tickers_url'),
+            filename = data.get('file_name'),
+            logo = data.get('logo'),
             extension = data.get('extension'),
-            file_dir = data.get('file_dir'),    
             )
-        self.columns = ["Papel","Cotação","EV/EBIT","ROIC","Liq.2meses"],
-        self.__user_agent = [
+        self.columns = ["Papel","Cotação", "P/L", "P/VP", "Div.Yield", 
+                        "EV/EBIT", "ROIC", "Mrg. Líq.", "Liq.2meses"]
+        
+        self._user_agent = [
                 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
                 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.83 Safari/537.36',
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36'
