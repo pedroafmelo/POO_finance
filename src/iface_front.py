@@ -24,7 +24,7 @@ class FrontEnd:
         self.calc = CompoundCalc()
         self.invest = InvestRecomend()
         self.filename = f"{self.config.vars.filename}{self.config.vars.extension}"
-        
+
         self.img_path = path.join(self.config.project_dir, "img", 
                                   self.config.vars.logo)
         self.file_path = path.join(self.config.project_dir, 
@@ -233,7 +233,5 @@ class FrontEnd:
             c3.write(f"Current Price: {company.info['currentPrice']}BRL")
         except KeyError:
             st.error("Type a valid B3 Asset Ticker")
-
-        st.line_chart(ticker_df.Close, color = "#FF0000")
 
         st.line_chart(ticker_df.Close, color = "#FF0000")
