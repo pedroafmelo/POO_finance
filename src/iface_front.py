@@ -26,7 +26,7 @@ class FrontEnd:
         self.filename = f"{self.config.vars.filename}{self.config.vars.extenion}"
         self.img_path = path.join(self.config.project_dir, "img", 
                                   self.config.vars.logo)
-        self.file_path = {path.join(self.config.project_dir, 
+        self.file_path = path.join(self.config.project_dir, 
                                self.config.vars.data_dir,
                                self.filename)
         
