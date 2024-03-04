@@ -118,7 +118,7 @@ class InvestRecomend:
 
         try:
             tickers = []
-            response = get(self.config.vars.tickers_url, headers={'User-Agent':random.choice(self.config.__user_agent)})
+            response = get(self.config.vars.tickers_url, headers={'User-Agent':random.choice(self.config._user_agent)})
 
 
             if not response.ok:
