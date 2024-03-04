@@ -9,7 +9,8 @@ class Variables:
     project_name: str
     project_icon: str
     data_dir: str
-    url: str
+    data_url: str
+    tickers_url: str
     extension: str
     file_dir: str
 
@@ -26,7 +27,8 @@ class Config:
             project_name = data.get('project_name'),
             project_icon = data.get('project_icon'),
             data_dir = data.get('data_dir'),
-            url = data.get('url'),
+            data_url = data.get('data_url'),
+            tickers_url = data.get('tickers_url'),
             extension = data.get('extension'),
             file_dir = data.get('file_dir'),    
             )

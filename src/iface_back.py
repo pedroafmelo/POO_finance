@@ -11,7 +11,7 @@ import random
 class CompoundCalc:
     """ Compound Interest Calc class """
 
-    def _init_(self,) -> int:
+    def _init_(self) -> int:
         """Initialize instance"""
         self.simulation = None
         self.state = False
@@ -91,6 +91,24 @@ class InvestRecomend:
             raise OSError(error) from error
 
         return dados
+    
+    def __get_tickers(self) -> list:
+        tickers = []
+        response = get(self.config.vars.tickers_url, headers={'User-Agent':random.choice(self.config.__user_agent)})
+        
+        if not response.ok:
+            raise FileNotFoundError("Couldn't request website")
+        
+        soup = BeautifulSoup(response.content, 'html.parser')
+        strongs = soup.find_all('strong')
+
+        for a in strongs:
+            ticker = a.find(a)
+
+            if ticker:
+                tickers.append(ticker.text)
+
+        return tickers
     
     def __transform(self, filename: str, qt_asset: int = 10) -> pd.DataFrame:
         """Transform companies data"""
