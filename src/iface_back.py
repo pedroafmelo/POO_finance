@@ -93,20 +93,25 @@ class InvestRecomend:
         return dados
     
     def __get_tickers(self) -> list:
-        tickers = []
-        response = get(self.config.vars.tickers_url, headers={'User-Agent':random.choice(self.config.__user_agent)})
-        
-        if not response.ok:
-            raise FileNotFoundError("Couldn't request website")
-        
-        soup = BeautifulSoup(response.content, 'html.parser')
-        strongs = soup.find_all('strong')
 
-        for a in strongs:
-            ticker = a.find(a)
+        try:
+            tickers = []
+            response = get(self.config.vars.tickers_url, headers={'User-Agent':random.choice(self.config.__user_agent)})
 
-            if ticker:
-                tickers.append(ticker.text)
+            if not response.ok:
+                raise FileNotFoundError("Couldn't request website")
+
+            soup = BeautifulSoup(response.content, 'html.parser')
+            strongs = soup.find_all('strong')
+
+            for a in strongs:
+                ticker = a.find(a)
+
+                if ticker:
+                    tickers.append(ticker.text)
+        
+        except Exception as error:
+            raise OSError(error) from error
 
         return tickers
     
