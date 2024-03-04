@@ -32,7 +32,6 @@ class CompoundCalc:
         """Calculate the mountant after investment"""
         
         fee = fee / 100
-
         months = []
         amounts = []
         no_fee_amount = []
@@ -41,28 +40,13 @@ class CompoundCalc:
 
         m = initial_cont  # Initialize the total amount
 
-        months = [''.join([str(1),'º Mês'])]
-        amounts = [initial_cont]
-
-
         for month in range(1, years * 12 + 1):
-
 
             m = m * (1 + fee) + monthly_cont  # Compound interest formula
             amount_no_fee += monthly_cont
             months.append(int(month))
             amounts.append(m)
             no_fee_amount.append(amount_no_fee)
-
-
-            for month in range(1, years * 12 + 1):
-
-                m = m * (1 + fee) + monthly_cont  # Compound interest formula
-                months.append(''.join([str(month),'º Mês']))
-                amounts.append(m)
-
-            self.simulation = dict(zip(months, amounts))
-            self.state = True
 
 
         total_amount = m 
@@ -156,7 +140,7 @@ class InvestRecomend:
         return tickers
     
 
-    def __transform(self, filename: str, qt_asset: int = 10) -> DataFrame:
+    def _transform(self, filename: str, qt_asset: int = 10) -> DataFrame:
 
         """Transform companies data"""
 
