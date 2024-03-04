@@ -25,6 +25,17 @@ class FrontEnd:
         self.invest = InvestRecomend()
         self.img_path = path.join(self.config.project_dir, "img", 
                                   self.config.vars.logo)
+        self.file_path = f"{path.join(self.config.project_dir, 
+                                   self.config.vars.data_dir,
+                                   self.config.vars.filename)}{self.config.vars.extension}"
+        
+    def __repr__(self):
+        """Basic instance representation"""
+        return "FrontEnd class"
+    
+    def __str__(self):
+        """Print instance representation"""
+        return "FrontEnd class"
         
     def basic_layout(self):
         """Streamlit Page Loayout"""
@@ -61,6 +72,8 @@ class FrontEnd:
 
 
     def menu(self):
+        """Streamlit nav menu"""
+
         selector = option_menu(
             menu_title = "",
             options = ["Calculator", "Assets"],
@@ -87,6 +100,7 @@ class FrontEnd:
 
     def import_json(self, path):
         """Load json files"""
+
         with open(path, "r", encoding="utf8", errors="ignore") as file:
             url = json.load(file)
         return url
@@ -156,7 +170,7 @@ class FrontEnd:
 
         row_data = _self.invest._extract_data()
 
-        data = _self.invest._transform(row_data)
+        data = _self.invest._transform(_self.file_path)
 
         c1.header(f"Top {data.shape[0]} B3 Assets to Invest Today")
 
@@ -217,5 +231,7 @@ class FrontEnd:
             c3.write(f"Current Price: {company.info["currentPrice"]}BRL")
         except KeyError:
             st.error("Type a valid B3 Asset Ticker")
+
+        st.line_chart(ticker_df.Close, color = "#FF0000")
 
         st.line_chart(ticker_df.Close, color = "#FF0000")
