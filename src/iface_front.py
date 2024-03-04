@@ -82,7 +82,7 @@ class FrontEnd:
             orientation = "horizontal",
             styles = {
                 "container": {"padding": "0!important", "background-color": "#FF708E"},
-                "icon": {"color": "black", "font-size": "20px"}, 
+                "icon": {"color": "white", "font-size": "20px"}, 
                 "nav-link": {"font-size": "20px", "text-align": "center", "margin":"0px", "--hover-color": "#eee"},
                 "nav-link-selected": {"background-color": "#FF0000"},
             }
