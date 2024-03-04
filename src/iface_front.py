@@ -26,8 +26,8 @@ class FrontEnd:
         self.img_path = path.join(self.config.project_dir, "img", 
                                   self.config.vars.logo)
         self.file_path = f"{path.join(self.config.project_dir, 
-                                   self.config.vars.data_dir,
-                                   self.config.vars.filename)}{self.config.vars.extension}"
+                               self.config.vars.data_dir,
+                               self.config.vars.filename)}{self.config.vars.extension}"
         
     def __repr__(self):
         """Basic instance representation"""
