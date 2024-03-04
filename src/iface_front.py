@@ -227,9 +227,11 @@ class FrontEnd:
         
         c1, c2, c3 = st.columns([1,1,1])
 
+        industry_disp = company.info.get('industryDisp', 'Not available')
 
         c1.write(f"Company: {company.info['longName']}")
-        c2.write(f"Market Area: {company.info['industryDisp']}")
+        c2.write(f"Market Area: {industry_disp}")
         c3.write(f"Current Price: {company.info['currentPrice']}BRL")
+
 
         st.line_chart(ticker_df.Close, color = "#FF0000")
