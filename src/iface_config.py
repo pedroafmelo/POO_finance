@@ -14,6 +14,7 @@ class Variables:
     tickers_url: str
     filename: str
     logo: str
+    calc_gif: str
     extension: str
 
 class Config:
@@ -36,6 +37,7 @@ class Config:
             tickers_url = data.get('tickers_url'),
             filename = data.get('file_name'),
             logo = data.get('logo'),
+            calc_gif = data.get('calc_gif'),
             extension = data.get('extension'),
             )
         self.columns = ["Papel","Cotação", "P/L", "P/VP", "Div.Yield", 

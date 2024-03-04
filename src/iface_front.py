@@ -25,8 +25,12 @@ class FrontEnd:
         self.invest = InvestRecomend()
         self.filename = f"{self.config.vars.filename}{self.config.vars.extension}"
 
-        self.img_path = path.join(self.config.project_dir, "img", 
+        self.logo_path = path.join(self.config.project_dir, "img", 
                                   self.config.vars.logo)
+        
+        self.calc_gif_path = path.join(self.config.project_dir, "img", 
+                                  self.config.vars.calc_gif)
+        
         self.file_path = path.join(self.config.project_dir, 
                                self.config.vars.data_dir,
                                self.filename)
@@ -48,7 +52,7 @@ class FrontEnd:
         
         c1, c2, c3 = st.columns([5, 5, 5])
         
-        lot = self.import_json(self.img_path)
+        lot = self.import_json(self.logo_path)
 
         with c1:
             st.lottie(lot, width = 170, height = 170)
@@ -150,15 +154,27 @@ class FrontEnd:
                             After {time} year(s), you would have an 
                             amount of ${result:.2f}</h4>""", unsafe_allow_html= True)
                 
-        st.write("#")
-        st.write("#")
 
-        if cont:
+        if not cont:
+
+            c1, c2, c3 = st.columns([1, 5, 1])
+            co1, co2, co3 = c2.columns(3)
+                
+            lot2 = self.import_json(self.calc_gif_path)
+
+            with co2:
+                st.lottie(lot2, width = 300, height = 300)
+            
+        elif cont:
+            st.write("#")
+            st.write("#")
             graph_result = self.calc.get_simulation()
             dados = DataFrame(graph_result)
             st.line_chart(dados,  x = "Month", 
                           y = ["With Compound Interest", "Without Compound Interest"],
                           color = ["#FF0000", "#FF708E"])
+            
+ 
             
 
     @st.cache_data
