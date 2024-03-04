@@ -11,7 +11,7 @@ import random
 class CompoundCalc:
     """ Compound Interest Calc class """
 
-    def __init__(self,) -> int:
+    def __init__(self) -> int:
         """Initialize instance"""
         self.simulation = None
         self.state = False

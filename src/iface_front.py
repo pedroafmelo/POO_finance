@@ -219,16 +219,3 @@ class FrontEnd:
             st.error("Type a valid B3 Asset Ticker")
 
         st.line_chart(ticker_df.Close, color = "#FF0000")
-
-
-    def main(self):
-        self.basic_layout()
-        self.compound_calc()
-        self.invest_rec()
-        self.hist_closing()
-
-
-
-if __name__ == "__main__":
-    main = FrontEnd()
-    main.main()
