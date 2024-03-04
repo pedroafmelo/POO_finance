@@ -11,7 +11,13 @@ import random
 class CompoundCalc:
     """ Compound Interest Calc class """
 
+    
     def __init__(self):
+
+    def __init__(self) -> int:
+
+    def _init_(self) -> int:
+
         """Initialize instance"""
         self.simulation = None
         self.state = False
@@ -30,6 +36,7 @@ class CompoundCalc:
         """Calculate the mountant after investment"""
         
         fee = fee / 100
+
         months = []
         amounts = []
         no_fee_amount = []
@@ -38,13 +45,29 @@ class CompoundCalc:
 
         m = initial_cont  # Initialize the total amount
 
+        months = [''.join([str(1),'º Mês'])]
+        amounts = [initial_cont]
+
+
         for month in range(1, years * 12 + 1):
+
 
             m = m * (1 + fee) + monthly_cont  # Compound interest formula
             amount_no_fee += monthly_cont
             months.append(int(month))
             amounts.append(m)
             no_fee_amount.append(amount_no_fee)
+
+
+            for month in range(1, years * 12 + 1):
+
+                m = m * (1 + fee) + monthly_cont  # Compound interest formula
+                months.append(''.join([str(month),'º Mês']))
+                amounts.append(m)
+
+            ganho_com_juros = m - initial_cont
+            self.simulation = dict(zip(months, amounts))
+            self.state = True
 
 
         total_amount = m 
@@ -54,6 +77,10 @@ class CompoundCalc:
 
         return total_amount  # Compound interest formula
 
+    
+    def get_simulation(self) -> dict:
+        if self.state:
+            return self.simulation
     
     def get_simulation(self) -> dict:
         if self.state:
@@ -110,6 +137,7 @@ class InvestRecomend:
 
         return dados
     
+
     def _get_tickers(self) -> list:
         """Get the b3 tickers"""
 
@@ -118,14 +146,27 @@ class InvestRecomend:
             response = get(self.config.vars.tickers_url, 
                            headers={'User-Agent':random.choice(self.config._user_agent)})
 
+    def __get_tickers(self) -> list:
+
+        try:
+            tickers = []
+            response = get(self.config.vars.tickers_url, headers={'User-Agent':random.choice(self.config.__user_agent)})
+
+
             if not response.ok:
                 raise FileNotFoundError("Couldn't request website")
 
             soup = BeautifulSoup(response.content, 'html.parser')
             strongs = soup.find_all('strong')
 
+
             for ticker in strongs:
                 ticker = ticker.find("a")
+
+            for a in strongs:
+                ticker = a.find(a)
+
+
                 if ticker:
                     tickers.append(ticker.text)
         
@@ -134,7 +175,11 @@ class InvestRecomend:
 
         return tickers
     
+
     def _transform(self, filename: str, qt_asset: int = 10) -> DataFrame:
+
+    def __transform(self, filename: str, qt_asset: int = 10) -> pd.DataFrame:
+
         """Transform companies data"""
 
         try:

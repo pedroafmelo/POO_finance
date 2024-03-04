@@ -233,3 +233,5 @@ class FrontEnd:
             st.error("Type a valid B3 Asset Ticker")
 
         st.line_chart(ticker_df.Close, color = "#FF0000")
+
+        st.line_chart(ticker_df.Close, color = "#FF0000")
