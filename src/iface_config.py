@@ -5,7 +5,8 @@ from os.path import join, dirname, abspath
 
 @dataclass
 class Variables:
-
+    """Store config class"""
+    
     project_name: str
     project_icon: str
     data_dir: str
@@ -16,8 +17,10 @@ class Variables:
     extension: str
 
 class Config:
+    """Basic Config class"""
 
     def __init__(self):
+        """Initialize instance"""
         
         self.project_dir = abspath(dirname(dirname(__file__)))
         data = {}

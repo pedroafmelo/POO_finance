@@ -11,16 +11,16 @@ import random
 class CompoundCalc:
     """ Compound Interest Calc class """
 
-    def __init__(self) -> int:
+    def __init__(self):
         """Initialize instance"""
         self.simulation = None
         self.state = False
 
-    def _repr_(self):
+    def __repr__(self):
         """Basic instance representation"""
         return "Compound Interest Calculator"
     
-    def _str_(self):
+    def __str__(self):
         """Print instance representation"""
         return "Compound Interest Calculator"
 
@@ -111,6 +111,7 @@ class InvestRecomend:
         return dados
     
     def _get_tickers(self) -> list:
+        """Get the b3 tickers"""
 
         try:
             tickers = []
@@ -141,7 +142,7 @@ class InvestRecomend:
 
             dados = (
 
-                read_csv(self.file_path, 
+                read_csv(filename, 
                          usecols = self.config.columns,
                          encoding = "utf-8",
                          thousands = ".", 
