@@ -99,9 +99,11 @@ class InvestRecomend:
         from src.iface_config import Config
 
         self.config = Config()
-        self.file_path = f"{path.join(self.config.project_dir, 
-                                   self.config.vars.data_dir,
-                                   self.config.vars.filename)}{self.config.vars.extension}"
+        self.filename = f"{self.config.vars.filename}{self.config.vars.extenion}"
+
+        self.file_path = path.join(self.config.project_dir, 
+                               self.config.vars.data_dir,
+                               self.filename)
         
         self.data_dir = path.join(self.config.project_dir, 
                       self.config.vars.data_dir)
