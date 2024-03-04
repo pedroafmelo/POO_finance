@@ -23,7 +23,8 @@ class FrontEnd:
         self.config = Config()
         self.calc = CompoundCalc()
         self.invest = InvestRecomend()
-        self.filename = f"{self.config.vars.filename}{self.config.vars.extenion}"
+        self.filename = f"{self.config.vars.filename}{self.config.vars.extension}"
+        
         self.img_path = path.join(self.config.project_dir, "img", 
                                   self.config.vars.logo)
         self.file_path = path.join(self.config.project_dir, 

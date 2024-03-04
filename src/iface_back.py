@@ -11,12 +11,8 @@ import random
 class CompoundCalc:
     """ Compound Interest Calc class """
 
-    
-    def __init__(self):
 
     def __init__(self) -> int:
-
-    def _init_(self) -> int:
 
         """Initialize instance"""
         self.simulation = None
@@ -65,7 +61,6 @@ class CompoundCalc:
                 months.append(''.join([str(month),'º Mês']))
                 amounts.append(m)
 
-            ganho_com_juros = m - initial_cont
             self.simulation = dict(zip(months, amounts))
             self.state = True
 
@@ -81,11 +76,6 @@ class CompoundCalc:
     def get_simulation(self) -> dict:
         if self.state:
             return self.simulation
-    
-    def get_simulation(self) -> dict:
-        if self.state:
-            return self.simulation
-    
 
 class InvestRecomend:
     """ Investiment recomendation class """
@@ -99,7 +89,7 @@ class InvestRecomend:
         from src.iface_config import Config
 
         self.config = Config()
-        self.filename = f"{self.config.vars.filename}{self.config.vars.extenion}"
+        self.filename = f"{self.config.vars.filename}{self.config.vars.extension}"
 
         self.file_path = path.join(self.config.project_dir, 
                                self.config.vars.data_dir,
@@ -133,7 +123,6 @@ class InvestRecomend:
                                  decimal = ",")[0].to_csv(self.file_path,
                                                           compression = "gzip")
 
-
         except Exception as error:
             raise OSError(error) from error
 
@@ -141,14 +130,7 @@ class InvestRecomend:
     
 
     def _get_tickers(self) -> list:
-        """Get the b3 tickers"""
-
-        try:
-            tickers = []
-            response = get(self.config.vars.tickers_url, 
-                           headers={'User-Agent':random.choice(self.config._user_agent)})
-
-    def __get_tickers(self) -> list:
+        """Get B3 Tickers"""
 
         try:
             tickers = []
@@ -165,10 +147,6 @@ class InvestRecomend:
             for ticker in strongs:
                 ticker = ticker.find("a")
 
-            for a in strongs:
-                ticker = a.find(a)
-
-
                 if ticker:
                     tickers.append(ticker.text)
         
@@ -178,14 +156,11 @@ class InvestRecomend:
         return tickers
     
 
-    def _transform(self, filename: str, qt_asset: int = 10) -> DataFrame:
-
-    def __transform(self, filename: str, qt_asset: int = 10) -> pd.DataFrame:
+    def __transform(self, filename: str, qt_asset: int = 10) -> DataFrame:
 
         """Transform companies data"""
 
         try:
-
 
             dados = (
 
