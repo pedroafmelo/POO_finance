@@ -227,11 +227,9 @@ class FrontEnd:
         
         c1, c2, c3 = st.columns([1,1,1])
 
-        try:
-            c1.write(f"Company: {company.info['longName']}")
-            c2.write(f"Market Area: {company.info['industryDisp']}")
-            c3.write(f"Current Price: {company.info['currentPrice']}BRL")
-        except KeyError:
-            st.error("Type a valid B3 Asset Ticker")
+
+        c1.write(f"Company: {company.info['longName']}")
+        c2.write(f"Market Area: {company.info['industryDisp']}")
+        c3.write(f"Current Price: {company.info['currentPrice']}BRL")
 
         st.line_chart(ticker_df.Close, color = "#FF0000")
