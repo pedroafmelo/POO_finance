@@ -236,24 +236,25 @@ class FrontEnd:
 
         company = yf.Ticker(f"{ticker}.SA")
         
-        ticker_df = company.history(period = "1d", 
-                                    start = "2023-01-01", 
-                                    end = "2024-02-29")
-
-        st.spinner("Loading...")
-
         try:
-            company_name = company.info['longName']
-            area = company.info['industryDisp']
-            price = company.info['currentPrice']
-            c1, c2, c3 = st.columns([1,1,1])
-        
-            c1.write(f"Company: {company_name}")
-            c2.write(f"Market Area: {area}")
-            c3.write(f"Current Price: {price}BRL")
+            ticker_df = company.history(period="1d", start="2023-01-01", end="2024-02-29")
 
-        except KeyError:
-            st.error("YFinance API doesn't have data for this Ticker")
+            st.spinner("Loading...")
+
+            if company.info is None:
+                st.error("Invalid Ticker Symbol or Company not listed")
+            else:
+                company_name = company.info.get('longName', 'N/A')
+                area = company.info.get('industryDisp', 'N/A')
+                price = company.info.get('currentPrice', 'N/A')
+        
+                c1, c2, c3 = st.columns([1, 1, 1])
+                c1.write(f"Company: {company_name}")
+                c2.write(f"Market Area: {area}")
+                c3.write(f"Current Price: {price}BRL")
+
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
         
         
 
