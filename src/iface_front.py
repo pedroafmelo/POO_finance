@@ -238,8 +238,6 @@ class FrontEnd:
         ticker_df = company.history(period = "1d", 
                                     start = "2023-01-01", 
                                     end = "2024-02-29")
-        
-        c1, c2, c3 = st.columns([1,1,1])
 
         st.spinner("Loading...")
 
@@ -250,7 +248,9 @@ class FrontEnd:
 
         except KeyError:
             st.error("YFinance API doesn't have data for this Ticker")
-
+        
+        c1, c2, c3 = st.columns([1,1,1])
+        
         c1.write(f"Company: {company_name}")
         c2.write(f"Market Area: {area}")
         c3.write(f"Current Price: {price}BRL")
