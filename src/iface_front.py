@@ -234,9 +234,9 @@ class FrontEnd:
                               self.invest._get_tickers(), 
                               self.invest._get_tickers().index("PETR4"))
 
-        company = yf.Ticker(f"{ticker}.SA")
         
         try:
+            company = yf.Ticker(f"{ticker}.SA")
             ticker_df = company.history(period="1d", start="2023-01-01", end="2024-02-29")
 
             st.spinner("Loading...")
