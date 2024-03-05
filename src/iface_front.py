@@ -231,7 +231,8 @@ class FrontEnd:
         st.write("#")
 
         ticker = st.selectbox("Choose the B3 Ticker", 
-                              self.invest._get_tickers(), index = 5)
+                              self.invest._get_tickers(), 
+                              self.invest._get_tickers()["PETR4"].index())
 
         company = yf.Ticker(f"{ticker}.SA")
         
