@@ -252,6 +252,7 @@ class FrontEnd:
             c3.write(f"Current Price: {price}BRL")
 
         except KeyError:
+            c1, c2, c3 = st.columns([1,1,1])
             c1.error("YFinance API doesn't have data for this Ticker")
         
         
