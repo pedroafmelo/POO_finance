@@ -243,12 +243,12 @@ class FrontEnd:
 
         st.spinner("Loading...")
 
-        try: 
-            c1.write(f"Company: {company.info['longName']}")
-            c2.write(f"Market Area: {company.info['industryDisp']}")
-            c3.write(f"Current Price: {company.info['currentPrice']}BRL")
         
-        except KeyError as error:
+        c1.write(f"Company: {company.info['longName']}")
+        c2.write(f"Market Area: {company.info['industryDisp']}")
+        c3.write(f"Current Price: {company.info['currentPrice']}BRL")
+    
+        if KeyError:
             st.error("Yfinance API Doesn't have information about this ticker")
 
 
