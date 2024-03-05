@@ -242,10 +242,15 @@ class FrontEnd:
         c1, c2, c3 = st.columns([1,1,1])
 
         st.spinner("Loading...")
+
+        try: 
+            c1.write(f"Company: {company.info['longName']}")
+            c2.write(f"Market Area: {company.info['industryDisp']}")
+            c3.write(f"Current Price: {company.info['currentPrice']}BRL")
         
-        c1.write(f"Company: {company.info['longName']}")
-        c2.write(f"Market Area: {company.info['industryDisp']}")
-        c3.write(f"Current Price: {company.info['currentPrice']}BRL")
+        except KeyError as error:
+            st.error("Yfinance API Doesn't have information about this ticker")
+
 
 
         st.line_chart(ticker_df.Close, color = "#FF0000")
