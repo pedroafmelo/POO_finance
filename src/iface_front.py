@@ -245,14 +245,15 @@ class FrontEnd:
             company_name = company.info['longName']
             area = company.info['industryDisp']
             price = company.info['currentPrice']
+            c1, c2, c3 = st.columns([1,1,1])
+        
+            c1.write(f"Company: {company_name}")
+            c2.write(f"Market Area: {area}")
+            c3.write(f"Current Price: {price}BRL")
 
         except KeyError:
-            st.error("YFinance API doesn't have data for this Ticker")
+            c1.error("YFinance API doesn't have data for this Ticker")
         
-        c1, c2, c3 = st.columns([1,1,1])
         
-        c1.write(f"Company: {company_name}")
-        c2.write(f"Market Area: {area}")
-        c3.write(f"Current Price: {price}BRL")
 
         st.line_chart(ticker_df.Close, color = "#FF0000")
