@@ -140,7 +140,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
   </a>
   <br/>
   <b>
-  <a href="https://www.linkedin.com/" target="_blank" >
+  <a href="https://www.linkedin.com/in/pedroafmelo?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" >
     <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" style="padding-top: 10px;">
   </a>
     <td align="center">
@@ -150,7 +150,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
     <sub><b>Pedro Henrique</b></sub>
   </a>
   <br />
-  <a href="https://www.linkedin.com/" target="_blank">
+  <a href="https://www.linkedin.com/in/pedrohmv" target="_blank">
     <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" style="padding-top: 10px;">
   </a>
 </td>
@@ -161,7 +161,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
     <sub><b>Lucas Rabay</b></sub>
   </a>
   <br />
-  <a href="https://www.linkedin.com/" target="_blank">
+  <a href="https://www.linkedin.com/in/pedroafmelo?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">
     <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" style="padding-top: 10px;">
   </a>
 </td>
