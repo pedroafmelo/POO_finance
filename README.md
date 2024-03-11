@@ -85,7 +85,7 @@ Além disto é bom ter um editor para trabalhar com o código como [VSCode](http
 Primeiramente clone o projeto
 ```bash
 # Clone este repositório
-$ git clone <https://github.com/pedroafmelo/POO_finance.git>
+$ git clone https://github.com/pedroafmelo/POO_finance.git
 
 # Acesse a pasta do projeto no terminal/cmd
 $ cd <caminho/até/POO_finance>
