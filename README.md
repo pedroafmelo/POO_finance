@@ -17,23 +17,23 @@
 
 Tabela de conteúdos
 =================
-<!--ts-->
-   * [Sobre](#Sobre)
-   * [Tabela de Conteudo](#tabela-de-conteudo)
-   * [Instalação](#instalacao)
-   * [Como usar](#como-usar)
-      * [Pre Requisitos](#pre-requisitos)
-      * [Local files](#local-files)
-      * [Remote files](#remote-files)
-      * [Multiple files](#multiple-files)
-      * [Combo](#combo)
-   * [Tests](#testes)
-   * [Tecnologias](#tecnologias)
-<!--te-->
+1. [Sobre](#sobre)
+2. [Features](#features)
+3. [Interface Inicial](#interface-inicial)
+4. [Calculadora de Juros Compostos](#calculadora-de-juros-compostos)
+5. [Recomendador de Investimentos](#recomendador-de-investimentos)
+6. [Histórico de Ações](#histórico-de-ações)
+7. [Como rodar localmente](#como-rodar-localmente)
+8. [Tecnologias e Ferramentas](#tecnologias-e-ferramentas)
+9. [Autores](#autores)
 
 <h4 align="center"> 
 	🚧  CoinPurse 🪙 Em construção...  🚧
 </h4>
+
+### Sobre <a name="sobre"></a>
+
+...
 
 ### Features
 
@@ -53,7 +53,7 @@ Tabela de conteúdos
 ### Calculadora de Juros Compostos
 <p align="center">
   <a>
-     <video controls src="img/"></video>
+     <img src="img/simulacao.png"></img>
   </a>
 </p>
 <br>
@@ -69,7 +69,7 @@ Tabela de conteúdos
 ### Histórico de Ações
 <p align="center">
   <a>
-    <video controls src="img/"></video>
+    <img src="img/historico.png"></img>
   </a>
 </p>
 <br>
@@ -115,7 +115,7 @@ $ python -m streamlit run app.py
 ````
 <br>
 
-### 🛠 Tecnologias e Ferramentas
+### Tecnologias e Ferramentas
 
 As seguintes ferramentas foram usadas na construção do projeto:
 
