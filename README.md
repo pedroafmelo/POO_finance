@@ -4,12 +4,6 @@
   </a>
 </p>
 
-<style>
-    body {
-        background-color: #151827; /* Substitua pela cor desejada */
-    }
-</style>
-
 <p align="center">
   <a href="https://coinpurse.streamlit.app/">
     <img src="https://img.shields.io/static/v1?label=streamlit&message=app&color=7159c1&style=for-the-badge&logo=streamlit" alt="Badge">
