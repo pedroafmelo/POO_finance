@@ -11,7 +11,7 @@
 </p>
 
 <br>
-<p align="center">Practical and portable finance analyst 🪙</p>
+<p align="center">Analista financeiro portátil e prático 🪙</p>
 <br>
 <br>
 
@@ -33,7 +33,7 @@ Tabela de conteúdos
 
 ### Sobre <a name="sobre"></a>
 
-...
+O CoinPurse é uma iniciativa tomada por 3 alunos do curso Ciência de Dados para Negócios da Universidade Federal da Paraíba e desenvolvido como projeto inicial da disciplina Programação Orientada a Objetos. O app é um simulador de investimentos com juros compostos, e um recomendador, além de dispor dados de históricos de ações.
 
 ### Features
 
