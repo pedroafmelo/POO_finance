@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from requests import get
 import random
 from abc import ABC, abstractmethod
+from datetime import datetime, timedelta
 
 class Calculator(ABC):
     """ Calculator Class """
@@ -255,5 +256,20 @@ class InvestRecomend:
         except Exception as error:
             raise OSError(error) from error
         
-        
         return dados
+        
+
+    def _get_date(self, time):
+
+        pattern = "%Y-%m-%d"
+
+        times = {
+            '1 year':timedelta(days=365),
+            '5 years':timedelta(days=365),
+            '1 month':timedelta(days=30),
+            '6 months':timedelta(days=30*6)
+        }
+
+        date = datetime.now() - times[time]
+
+        return date.strftime(pattern) 

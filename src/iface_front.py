@@ -8,6 +8,7 @@ import streamlit as st
 from streamlit_extras.stylable_container import stylable_container 
 from streamlit_option_menu import option_menu
 from streamlit_lottie import st_lottie
+from datetime import datetime
 
 
 class FrontEnd:
@@ -230,14 +231,20 @@ class FrontEnd:
         st.header("B3 assets closing prices historic")
         st.write("#")
 
-        ticker = st.selectbox("Choose the B3 Ticker", 
+        ticker = st.selectbox(
+                              "Choose the B3 Ticker", 
                               self.invest._get_tickers(), 
-                              self.invest._get_tickers().index("PETR4"))
+                              self.invest._get_tickers().index("PETR4")
+                              )
+        time = st.selectbox(
+            "Choose the time period",
+            ['1 month','6 months','1 year','5 years']
+            )
 
         
         try:
             company = yf.Ticker(f"{ticker}.SA")
-            ticker_df = company.history(period="1d", start="2023-01-01", end="2024-02-29")
+            ticker_df = company.history(period="1d", start=self.invest._get_date(time), end=datetime.now().strftime("%Y-%m-%d"))
 
             st.spinner("Loading...")
 
