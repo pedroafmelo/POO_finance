@@ -8,6 +8,38 @@ from requests import get
 import random
 
 
+
+class Calculator:
+    """ Calculator Class """
+
+    def __init__(self):
+        self.type = "Regular"
+
+    def __repr__(self):
+        """Basic instance representation"""
+        return "Regular Calculator"
+    
+    def __str__(self):
+        """Print instance representation"""
+        return "Regular Calculator"
+    
+    def soma(self, *nums):
+        """Basic args sum"""
+        result = sum(nums)
+
+        return result
+
+    def subtract(self, num1, num2):
+        """Basic args subtract"""
+
+        return num1 - num2
+    
+    def times(self,*nums):
+        """Basic args multiplying"""
+        for i, value in enumerate(nums):
+            result = value[i] * value[i+1]
+            
+
 class CompoundCalc:
     """ Compound Interest Calc class """
 
