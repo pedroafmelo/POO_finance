@@ -5,3 +5,4 @@
 .pdf
 myenv
 venv
+__pycache__
