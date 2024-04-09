@@ -1,6 +1,10 @@
 import streamlit as st
 
 def riskProfileQuiz():
+    st.header("Risk Profile Quiz")
+    st.write("#")
+    st.subheader("Answer this quiz to map your investor profile.")
+    st.write("#")
     # Constants for responses
     agree = "agree"
     disagree = "disagree"
@@ -25,8 +29,10 @@ def riskProfileQuiz():
     profile_counter = 0
     for i, question in enumerate(questions):
         st.write(question)
-        answer = st.selectbox('Answer:', answers.keys(), key=i)
-        profile_counter += answers[answer]
+        answer = st.selectbox('Answer:',answers.keys(), key=i, index=None)
+        st.write("#")
+        if answer:
+            profile_counter += answers[answer]
 
     # Determine profile
     if profile_counter < 4:
@@ -37,7 +43,3 @@ def riskProfileQuiz():
         profile = "Moderate."
 
     return profile
-
-# Application
-response = riskProfileQuiz()
-st.write("Your risk profile is:", response)
