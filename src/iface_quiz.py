@@ -1,52 +1,43 @@
+import streamlit as st
+
 def riskProfileQuiz():
     # Constants for responses
-    concordo = "concordo"
-    discordo = "discordo"
-    neutro = "neutro"
+    agree = "agree"
+    disagree = "disagree"
+    neutral = "neutral"
 
     # Questions and answers
     questions = [
-        "Aceito assumir riscos no longo prazo, pois acredito que no longo prazo o retorno será maior.",
-        "Ganhar o máximo que puder é importante para mim, mesmo que tenha risco de perder parte do capital.",
-        "Prefiro ver meus investimentos crescendo constantemente, sem altos e baixos, mesmo que no longo prazo eu tenha retorno menor.",
-        "Evitar perdas neste ano é mais importante do que crescimento a longo prazo. Eu quero proteger minha poupança a curto prazo."
+        "I am willing to take risks in the long term because I believe that in the long run the return will be higher.",
+        "Winning as much as possible is important to me, even if there is a risk of losing part of the capital.",
+        "I prefer to see my investments growing steadily, without highs and lows, even if in the long run I have a lower return.",
+        "Avoiding losses this year is more important than long-term growth. I want to protect my savings in the short term."
     ]
 
-    answers = [
-        [discordo, neutro, concordo],
-        [discordo, neutro, concordo],
-        [concordo, neutro, discordo],
-        [concordo, neutro, discordo]
-    ]
+    answers = {
+        disagree:0,
+        neutral:1,
+        agree:3
+
+    }
 
     # Ask questions and get responses
     profile_counter = 0
     for i, question in enumerate(questions):
-        print(question)
-        for j, answer in enumerate(answers[i]):
-            print(f"{j+1}: {answer}")
+        st.write(question)
+        answer = st.selectbox('Answer:', answers.keys(), key=i)
+        profile_counter += answers[answer]
 
-        response = input("Your answer (1/2/3): ")
-        while response not in ['1', '2', '3']:
-            response = ("Invalid response. Please enter 1, 2 or 3:")
-        if response == '1':
-            profile_counter += 0
-        elif response == '2':
-            profile_counter += 1
-        elif response == '3':
-            profile_counter += 3
-
-    #Determinando perfil
-
+    # Determine profile
     if profile_counter < 4:
-        profile = "Conservador."
+        profile = "Conservative."
     elif profile_counter > 8:
-        profile = "Agressivo."
+        profile = "Aggressive."
     else:
-        profile = "Moderado."
+        profile = "Moderate."
 
     return profile
 
-#Aplicação
-resposta = riskProfileQuiz()
-print("Seu perfil de risco é:", resposta)
+# Application
+response = riskProfileQuiz()
+st.write("Your risk profile is:", response)
