@@ -6,41 +6,67 @@ from pandas import read_csv, read_html, DataFrame
 from bs4 import BeautifulSoup
 from requests import get
 import random
+from abc import ABC, abstractmethod
+from datetime import datetime, timedelta
 
-
-
-class Calculator:
+class Calculator(ABC):
     """ Calculator Class """
 
-    def __init__(self):
-        self.type = "Regular"
-
+    @abstractmethod
     def __repr__(self):
         """Basic instance representation"""
-        return "Regular Calculator"
+        pass
     
+    @abstractmethod
     def __str__(self):
         """Print instance representation"""
-        return "Regular Calculator"
+        pass
     
-    def soma(self, *nums):
+    @abstractmethod
+    def sum_numbers(self, *nums):
         """Basic args sum"""
-        result = sum(nums)
+        pass
 
-        return result
-
+    @abstractmethod
     def subtract(self, num1, num2):
         """Basic args subtract"""
-
-        return num1 - num2
+        pass
     
+    @abstractmethod
     def times(self,*nums):
         """Basic args multiplying"""
-        for i, value in enumerate(nums):
-            result = value[i] * value[i+1]
+        pass
             
 
-class CompoundCalc:
+#class Calculator(ABC):
+#    """ Calculator Class """
+#
+#    def __repr__(self):
+#        """Basic instance representation"""
+#        return "Regular Calculator"
+#    
+#    def __str__(self):
+#        """Print instance representation"""
+#        return "Regular Calculator"
+#    
+#    def sum_array(self, *nums):
+#        """Basic args sum"""
+#        result = sum(nums)
+#
+#        return result
+#
+#    def subtract(self, num1, num2):
+#        """Basic args subtract"""
+#
+#        return num1 - num2
+#    
+#    def times(self,*nums):
+#        """Basic args multiplying"""
+#        for i, value in enumerate(nums):
+#            result = value[i] * value[i+1]
+            
+
+class CompoundCalc(Calculator):
     """ Compound Interest Calc class """
 
 
@@ -57,6 +83,24 @@ class CompoundCalc:
     def __str__(self):
         """Print instance representation"""
         return "Compound Interest Calculator"
+    
+    def sum_numbers(self, *nums):
+        """Basic args sum"""
+        result = sum(nums)
+
+        return result
+
+    def subtract(self, num1, num2):
+        """Basic args subtract"""
+
+        return num1 - num2
+    
+    def times(self,*nums):
+        """Basic args multiplying"""
+        for i, value in enumerate(nums):
+            result = value[i] * value[i+1]
+        
+        return result
 
     def calculator(self, years: int, initial_cont: float, 
                   fee: float, monthly_cont: float) -> int:
@@ -74,7 +118,7 @@ class CompoundCalc:
 
         for month in range(1, years * 12 + 1):
 
-            m = m * (1 + fee) + monthly_cont  # Compound interest formula
+            m = m * (1 + fee) + monthly_cont# Compound interest formula
             amount_no_fee += monthly_cont
             months.append(int(month))
             amounts.append(m)
@@ -212,5 +256,20 @@ class InvestRecomend:
         except Exception as error:
             raise OSError(error) from error
         
-        
         return dados
+        
+
+    def _get_date(self, time):
+
+        pattern = "%Y-%m-%d"
+
+        times = {
+            '1 year':timedelta(days=365),
+            '5 years':timedelta(days=365),
+            '1 month':timedelta(days=30),
+            '6 months':timedelta(days=30*6)
+        }
+
+        date = datetime.now() - times[time]
+
+        return date.strftime(pattern) 
