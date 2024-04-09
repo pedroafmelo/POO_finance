@@ -3,3 +3,5 @@
 .ipynb
 *teste*
 .pdf
+.drawio
+*pycache*

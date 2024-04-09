@@ -11,7 +11,8 @@ class Variables:
     project_icon: str
     data_dir: str
     data_url: str
-    tickers_url: str
+    stock_tickers_url: str
+    crypto_tickers_url: str
     filename: str
     logo: str
     calc_gif: str
@@ -34,7 +35,8 @@ class Config:
             project_icon = data.get('project_icon'),
             data_dir = data.get('data_dir'),
             data_url = data.get('data_url'),
-            tickers_url = data.get('tickers_url'),
+            stock_tickers_url = data.get('stock_tickers_url'),
+            crypto_tickers_url = data.get('crypto_tickers_url'),
             filename = data.get('file_name'),
             logo = data.get('logo'),
             calc_gif = data.get('calc_gif'),
