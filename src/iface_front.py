@@ -231,38 +231,97 @@ class FrontEnd:
         st.header("B3 assets closing prices historic")
         st.write("#")
 
+        tickers = self.invest._get_tickers()
+
         ticker = st.selectbox(
-                              "Choose the B3 Ticker", 
-                              self.invest._get_tickers(), 
-                              self.invest._get_tickers().index("PETR4")
-                              )
-        time = st.selectbox(
-            "Choose the time period",
-            ['1 month','6 months','1 year','5 years']
+            "Choose the B3 Ticker", 
+            tickers, 
+            index=tickers.index("PETR4")
+        )
+
+        if ticker:
+            # Criar uma cópia da lista de tickers e remover o ticker selecionado
+            second_tickers = tickers.copy()
+            second_tickers.remove(ticker)
+
+            second_ticker_select = st.selectbox(
+                "Choose the second B3 Ticker", 
+                second_tickers,
+                index=None
             )
 
-        
-        try:
-            company = yf.Ticker(f"{ticker}.SA")
-            ticker_df = company.history(period="1d", start=self.invest._get_date(time), end=datetime.now().strftime("%Y-%m-%d"))
+            if not second_ticker_select:
+                time = st.selectbox(
+                    "Choose the time period",
+                    ['1 year','6 months','1 month','2 years'],
+                )
+                first_company = yf.Ticker(f"{ticker}.SA")
+                first_ticker_df = first_company.history(period="1d", start=self.invest._get_date(time), end=datetime.now().strftime("%Y-%m-%d"))
+                st.spinner("Loading...")
 
-            st.spinner("Loading...")
+                if first_company.info is None:
+                    st.error("Invalid Ticker Symbol or Company not listed")
+                else:
+                    company_name = first_company.info.get('longName', 'N/A')
+                    area = first_company.info.get('industryDisp', 'N/A')
+                    price = first_company.info.get('currentPrice', 'N/A')
+                    c1, c2, c3 = st.columns([1, 1, 1])
+                    c1.write(f"Company: {company_name}")
+                    c2.write(f"Market Area: {area}")
+                    c3.write(f"Current Price: {price}BRL")
 
-            if company.info is None:
-                st.error("Invalid Ticker Symbol or Company not listed")
-            else:
-                company_name = company.info.get('longName', 'N/A')
-                area = company.info.get('industryDisp', 'N/A')
-                price = company.info.get('currentPrice', 'N/A')
-        
-                c1, c2, c3 = st.columns([1, 1, 1])
-                c1.write(f"Company: {company_name}")
-                c2.write(f"Market Area: {area}")
-                c3.write(f"Current Price: {price}BRL")
+                st.line_chart(first_ticker_df.Close, color ='#FF0000')
+            
+            if second_ticker_select:
 
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
-        
-        
+                time = st.selectbox(
+                    "Choose the time period",
+                    ['1 year','6 months','1 month','2 years'],
+                )
 
-        st.line_chart(ticker_df.Close, color = "#FF0000")
+                try:
+                    first_company = yf.Ticker(f"{ticker}.SA")
+                    second_company = yf.Ticker(f"{second_ticker_select}.SA")
+                    first_ticker_df = first_company.history(period="1d", start=self.invest._get_date(time), end=datetime.now().strftime("%Y-%m-%d"))
+                    second_ticker_df = second_company.history(period="1d", start=self.invest._get_date(time), end=datetime.now().strftime("%Y-%m-%d"))
+                    combined_df = DataFrame({
+                        f"{ticker}": first_ticker_df['Close'],
+                        f"{second_ticker_select}": second_ticker_df['Close']
+                    })
+
+                    st.spinner("Loading...")
+
+                    if first_company.info is None and second_company is None:
+                        st.error("Invalid Ticker Symbol or Company not listed")
+                    else:
+                        first_company_name = first_company.info.get('longName', 'N/A')
+                        first_area = first_company.info.get('industryDisp', 'N/A')
+                        first_price = first_company.info.get('currentPrice', 'N/A')
+                        second_company_name = second_company.info.get('longName', 'N/A')
+                        second_area = second_company.info.get('industryDisp', 'N/A')
+                        second_price = second_company.info.get('currentPrice', 'N/A')
+
+                        st.write("#")
+                        c1, c2, c3, c4 = st.columns([1, 1, 1, 1])
+                        col1,col2,col3 = c1.columns([1,2,1])
+                        col2.write(f"Ticker: {ticker}")
+                        c2.write(f"Company: {first_company_name}")
+                        c3.write(f"Market Area: {first_area}")
+                        c4.write(f"Current Price: {first_price}BRL")
+
+                        st.divider()
+
+                        c5, c6, c7, c8 = st.columns([1, 1, 1, 1])
+                        col4,col5,col6 = c5.columns([1,2,1])
+                        col5.write(f"Ticker: {second_ticker_select}")
+                        c6.write(f"Company: {second_company_name}")
+                        c7.write(f"Market Area: {second_area}")
+                        c8.write(f"Current Price: {second_price}BRL")
+
+
+
+                except Exception as e:
+                    st.error(f"An error occurred: {str(e)}")
+
+                st.write("#")
+                st.line_chart(combined_df, color =['#0000FF', '#FF0000'])

@@ -265,7 +265,7 @@ class InvestRecomend:
 
         times = {
             '1 year':timedelta(days=365),
-            '5 years':timedelta(days=365),
+            '2 years':timedelta(days=365*2),
             '1 month':timedelta(days=30),
             '6 months':timedelta(days=30*6)
         }
