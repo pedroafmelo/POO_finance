@@ -9,3 +9,5 @@ bs4==0.0.2
 requests==2.31.0
 cryptocmd
 plotly-express
+pandas_datareader
+selenium

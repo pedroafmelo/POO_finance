@@ -1,15 +1,20 @@
 # -- coding: UTF-8 --
 """Import modules"""
 from os import path
-from pandas import DataFrame, set_option, concat
+from pandas import DataFrame, set_option
 import yfinance as yf
 import json
 import streamlit as st
 from streamlit_extras.stylable_container import stylable_container 
-from streamlit_option_menu import option_menu
 from streamlit_lottie import st_lottie
-from src.iface_quiz import Quiz
+from streamlit_option_menu import option_menu
 from datetime import datetime
+
+from src.quiz import Quiz
+from src.iface_config import Config
+from src.iface_back import CompoundCalc, InvestRecomend
+from src.fixed import CDB, LCA
+from src.equity import Stock, Crypto
 
 class FrontEnd:
     """ Iface_frontend """
@@ -17,16 +22,14 @@ class FrontEnd:
     def __init__(self):
         """ Initialize instance """
 
-        # Import config, back end iface
-        from src.iface_config import Config
-        from src.iface_back import CompoundCalc, InvestRecomend, Stock, Crypto
-
         self.config = Config()
         self.calc = CompoundCalc()
         self.invest = InvestRecomend()
         self.stock = Stock()
         self.crypto = Crypto()
         self.quiz = Quiz()
+        self.cdb = CDB()
+        self.lca = LCA()
         self.filename = f"{self.config.vars.filename}{self.config.vars.extension}"
 
         self.logo_path = path.join(self.config.project_dir, "img", 
@@ -86,14 +89,19 @@ class FrontEnd:
 
         selector = option_menu(
             menu_title = "",
-            options = ["Calculator", "Assets", "Quiz"],
+            options = ["Calculator", "Equity", "Fixed Income","Quiz"],
             default_index = 0,
-            icons = ["calculator", "coin", "question"],
+            icons = ["calculator", "cash-coin", "piggy-bank", "question"],
             orientation = "horizontal",
             styles = {
-                "container": {"padding": "0!important", "background-color": "#FF708E"},
+                "container": {"padding": "0!important", 
+                              "background-color": "#FF708E"},
+
                 "icon": {"color": "white", "font-size": "20px"}, 
-                "nav-link": {"font-size": "20px", "text-align": "center", "margin":"0px", "--hover-color": "#eee"},
+
+                "nav-link": {"font-size": "20px", "text-align": "center", 
+                             "margin":"0px", "--hover-color": "#eee"},
+
                 "nav-link-selected": {"background-color": "#FF0000"},
             }
     )
@@ -101,7 +109,7 @@ class FrontEnd:
             st.write("#")
             self.compound_calc()
 
-        elif selector == "Assets":
+        elif selector == "Equity":
             st.write("#")
             st.spinner("Loading your wallet")
             self.invest_rec()
@@ -116,6 +124,16 @@ class FrontEnd:
             else:
                 c1.subheader("Crypto")
                 self.crypto_hist_closing()
+
+        elif selector == "Fixed Income":
+            c1, c2 = st.columns(2)
+            c1.write("#")
+            c1.write("#")
+            c2.write("#")
+            c2.write("#")
+
+            self.cdbs(c1)
+            self.lcas(c2)
 
         elif selector == "Quiz":
             with st.form("Quiz", border = False):
@@ -204,47 +222,40 @@ class FrontEnd:
         """Call invest recommend class
         prints table"""
 
-        set_option('display.html.table_schema', True)
-
         c1, c2 = st.columns([4, 3])
 
-        _self.invest._extract_data()
+        chosen_tickers = _self.invest._portfolio_management(_self.invest.fund_tickers())
 
-        data = _self.invest._transform(_self.file_path)
-
-        c1.header(f"Top {data.shape[0]} B3 Assets to Invest Today")
+        c1.header(f"Top 5 Stocks to Invest in B3 today")
 
         c1.write("#")
-        c1.dataframe(data, use_container_width= True, 
-                     hide_index = True)
-        c1.write("#")
 
-        c2.write("#")
-        c2.write("#")
-        c2.write("#")
+        with stylable_container(
+                key="container_with_border",
+                css_styles="""
+                    {
+                        border: 3px solid rgba(49, 51, 63, 0.2);
+                        border-radius: 0.5rem;
+                        padding: calc(1em - 1px)
+                    }
+                    """
+            ):
+                columns = st.columns(5)
+                
+                for index, ticker in enumerate(chosen_tickers):
+                    company = yf.Ticker(ticker)
+                    company_name = company.info.get('longName', 'N/A')
+                    area = company.info.get('industryDisp', 'N/A')
+                    price = company.info.get('currentPrice', 'N/A')
 
-        col1, col2, col3 = c2.columns([1,4,1])
-
-
-        with col2.expander("Cotação"):
-            st.write("This is the price of that asset in the present moment")
-
-        col2.write("#")
-
-        with col2.expander("roic"):     
-            st.write("""This is the Return on Invested Capital, an 
-                        indicator that shows the rentability of that asset""")
-        col2.write("#")
-
-        with col2.expander("ev_ebit"): 
-            st.write("""This is the Enterprise Value over 
-                        the Earnings Before Interest and Taxes, that 
-                        shows the company profit after all discounts """)
-        col2.write("#")
-
-        with col2.expander("preco_valor_patrimonial"):
-            st.write("""This indicator shows the price of that asset over
-                        the patrimonial value of that company, which can be a great price indicator""")
+                    columns[index].markdown(f"""<h3 style= 'text-align: left; color: white;'
+                                >Ticker: {ticker.replace(".SA", "")}</h3>""", unsafe_allow_html = True)
+                    columns[index].write(f"Company: \n {company_name}")
+                    columns[index].write(f"Market : \n{area}")
+                    columns[index].write(f"Current Price: \n{price}")
+        
+        st.write("#")
+        st.write("#")
 
 
     def stock_hist_closing(self):
@@ -308,8 +319,12 @@ class FrontEnd:
                 try:
                     first_company = yf.Ticker(f"{ticker}.SA")
                     second_company = yf.Ticker(f"{second_ticker_select}.SA")
-                    first_ticker_df = first_company.history(period="1d", start=self.stock.get_dates(time), end=datetime.now().strftime("%Y-%m-%d"))
-                    second_ticker_df = second_company.history(period="1d", start=self.stock.get_dates(time), end=datetime.now().strftime("%Y-%m-%d"))
+                    first_ticker_df = first_company.history(period="1d", 
+                                                            start=self.stock.get_dates(time),
+                                                            end=datetime.now().strftime("%Y-%m-%d"))
+                    second_ticker_df = second_company.history(period="1d", 
+                                                              start=self.stock.get_dates(time),
+                                                              end=datetime.now().strftime("%Y-%m-%d"))
                     combined_df = DataFrame({
                         f"{ticker}": first_ticker_df['Close'],
                         f"{second_ticker_select}": second_ticker_df['Close']
@@ -366,7 +381,7 @@ class FrontEnd:
 
         time = c2.selectbox("Choose a timestamp",
                             ["1 month", "6 months", 
-                             "1 year", " years"],
+                             "1 year", "5 years"],
                              index = 2)
         
         time = self.crypto.get_dates(time)
@@ -388,5 +403,38 @@ class FrontEnd:
             st.error(f"An error occurred: {str(e)}")
         
         st.line_chart(data = ticker_df,
-                      x = "Date", y = "Close", 
+                      x = "Date", y = "Close",
                       color = "#FF0000")
+        
+
+    def cdbs(self, column):
+        """Print the CDBS
+        avaiable in Info Money"""
+        
+        column.header("CDBS avaiable in XP Investments")
+
+        column.write("#")
+
+        dados = self.cdb.get_dataframe()
+
+        column.dataframe(dados, hide_index= True)
+
+
+    def lcas(self, column):
+        """Print the CDBS
+        avaiable in Info Money"""
+        
+        column.header("LCAS avaiable in XP Investments")
+
+        column.write("#")
+
+        dados = self.lca.get_dataframe()
+
+        column.dataframe(dados, hide_index= True)
+
+
+    def compare_fixed(self):
+        """Compare the selected
+        asset with the DI curl"""
+
+        

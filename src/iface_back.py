@@ -1,15 +1,17 @@
 # -- coding: UTF-8 --
 """Import modules"""
 import yfinance as yf
-from cryptocmd import CmcScraper
-from os import path, makedirs
-from pandas import read_csv, read_html, DataFrame
-from bs4 import BeautifulSoup
-from requests import get
+from pandas_datareader import data as web
+from pandas import DataFrame
+from src.iface_config import Config
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
-import random
+import streamlit as st
+import riskfolio as rp
 
+from src.iface_config import Config
+
+yf.pdr_override()
 
 class Calculator(ABC):
     """ Calculator Class """
@@ -34,16 +36,16 @@ class CompoundCalc(Calculator):
     """ Compound Interest Calc class """
 
     def _init_(self) -> int:
-
         """Initialize instance"""
+        
         self.simulation = None
         self.state = False
 
-    def _repr_(self):
+    def __repr__(self):
         """Basic instance representation"""
         return "Compound Interest Calculator"
     
-    def _str_(self):
+    def __str__(self):
         """Print instance representation"""
         return "Compound Interest Calculator"
     
@@ -106,21 +108,8 @@ class InvestRecomend:
         """Initialize instance
         actions_qt: number of assets to be recommended"""
 
-        # Import config iface
-        from src.iface_config import Config
-
         self.config = Config()
-        self.filename = f"{self.config.vars.filename}{self.config.vars.extension}"
-
-        self.file_path = path.join(self.config.project_dir, 
-                               self.config.vars.data_dir,
-                               self.filename)
-        
-        self.data_dir = path.join(self.config.project_dir, 
-                      self.config.vars.data_dir)
-        
-        makedirs(self.data_dir, 
-                 exist_ok = True)
+        self.tickers = Config().bova11
         
     def __repr__(self):
         """Basic instance representation"""
@@ -130,265 +119,48 @@ class InvestRecomend:
         """Print instance representation"""
         return "Invest Recommend Class"
 
-    def _extract_data(self) -> DataFrame:
+    @st.cache_data
+    def fund_tickers(_self) -> DataFrame:
         """Extract table from 
         Fundamentus website"""
-
-        try:
-            response = get(self.config.vars.data_url, 
-                           headers={'User-Agent': random.choice(self.config._user_agent)})
-            if not response.ok:
-                raise FileNotFoundError("Couldn't request website")
-            soup = BeautifulSoup(response.content, "html.parser")
-
-            table_content = soup.find("table", 
-                                      class_ = "resultado rowstyle-par colstyle-col no-arrow")
-            if table_content is None:
-                raise PermissionError("Can't have access to the server")
-
-            dados = read_html(str(table_content), 
-                                 encoding = "utf-8",
-                                 thousands = ".", 
-                                 decimal = ",")[0].to_csv(self.file_path,
-                                                          index = False,
-                                                          compression = "gzip")
-
-        except Exception as error:
-            raise OSError(error) from error
-
-        return dados
-    
-
-    def _transform(self, filename: str, qt_asset: int = 10) -> DataFrame:
-
-        """Transform companies data"""
-
-        try:
-            
-            dados = (
-
-                read_csv(filename, 
-                         usecols = self.config.columns,
-                         encoding = "utf-8")
-
-                .rename(columns = lambda x: x.lower())
-                .rename(columns = {"liq.2meses": "liq_2_meses", 
-                                       "ev/ebit": "ev_ebit",
-                                       "p/vp": "preco_valor_patrimonial",
-                                       "pl": "preco_lucro"})
-                .assign(
-                    roic = lambda x: x["roic"].str.replace(".", "")
-                    .str.replace(",", ".").str.replace("%", "").astype(float),
-                )
-                .assign(
-                    ebit_ev = lambda x: x["ev_ebit"].apply(lambda y: 1/y if y != 0 else 0),
-                    ranking_evebit = lambda x: x["ebit_ev"].rank(ascending = False),
-                    ranking_roic = lambda x: x["roic"].rank(ascending = False),
-                    ranking_geral = lambda x: x["ranking_evebit"] + x["ranking_roic"],
-                    ranking_final = lambda x: x["ranking_geral"].rank(),
-                    ranking = lambda x: x["ranking_geral"].rank()
-                )
-                .drop(["ranking_evebit", "ranking_roic", "ranking_geral", "ranking_final", "ev_ebit"], axis = 1)
-                .sort_values("ranking")
-                .query("ranking <= 10")
-
-            )
-
-        except Exception as error:
-            raise OSError(error) from error
+        yf.pdr_override()
         
-        
-        return dados
-    
-class Asset(ABC):
-    """Assets Abstract Class
-    Defines methods and attrs for henritage"""
-
-    def __init__(self, asset: bool, type: str, name: str):
-
-        # Import config iface
-        from src.iface_config import Config
-
-        self.config = Config()
-        self.asset = asset
-        self.type = type
-        self.name = name
-        
-    def __repr__(self):
-        """Basic instance representation"""
-        return "Assets Abstract Class"
-
-    def __str__(self):
-        """Print instance representation"""
-        return "Assets Abstract Class"
-    
-    @abstractmethod
-    def _get_codes(self):
-        pass
-
-    @abstractmethod
-    def get_dates(self, months):
-        pass
-
-    @abstractmethod
-    def get_dataframe(self, company: str, 
-                      start_date: str, end_date: str):
-        pass
-
-class Stock(Asset):
-    """Stock Assets Class"""
-
-    def __init__(self, asset = True, type = "Variable", name = "Stock"):
-
-        # Import config iface
-        from src.iface_config import Config
-        self.config = Config()
-
-        super().__init__(asset, type, name)
-        self.type = type
-        self.name = name
-
-    def __repr__(self):
-        """Basic instance representation"""
-        return "Stock Assets Class"
-
-    def __str__(self):
-        """Print instance representation"""
-        return "Stock Assets Class"
-    
-    def _get_codes(self) -> list:
-        """Get B3 Stock Tickers"""
-
-        try:
-            tickers = []
-            response = get(self.config.vars.stock_tickers_url, 
-                           headers={'User-Agent':random.choice(self.config._user_agent)})
-
-
-            if not response.ok:
-                raise FileNotFoundError("Couldn't request website")
-
-            soup = BeautifulSoup(response.content, 'html.parser')
-            strongs = soup.find_all('strong')
-
-
-            for ticker in strongs:
-                ticker = ticker.find("a")
-
-                if ticker:
-                    tickers.append(ticker.text)
-        
-        except Exception as error:
-            raise OSError(error) from error
-
-        return tickers
-    
-    def get_dates(self, time):
-        """Get Dates bases 
-        on user input"""
-
         pattern = "%Y-%m-%d"
+        inicial_date = datetime.now() - timedelta(days = 365 * 5)
+        inicial_date = inicial_date.strftime(pattern) 
+        final_date = datetime.now()
 
-        times = {
-            '1 year':timedelta(days=365),
-            '5 years':timedelta(days=365 * 5),
-            '1 month':timedelta(days=30),
-            '6 months':timedelta(days=30*6)
-        }
+        # try:
+        tickers_yahoo = [ticker + '.SA' for ticker in _self.tickers]
+        dados_tickers = web.get_data_yahoo(tickers_yahoo, 
+                                        start = inicial_date, end = final_date)
+        variation_df = dados_tickers['Adj Close'].pct_change()
+        variation_df = variation_df[1:].dropna(axis = 1)
 
-        date = datetime.now() - times[time]
-
-        return date.strftime(pattern) 
-
-
-    def get_dataframe(self, company, start_date):
-        """Get dataframe of closing
-         stocks"""
-    
-        try:
-            business = yf.Ticker(f"{company}.SA")
-            ticker_df = business.history(period="1d", 
-                                         start = start_date)
-
-        except Exception as e:
-            raise (f"An error occurred: {str(e)}")
+        # except NameError:
+        #     raise OSError("Could not download Tickers")
         
-        return ticker_df
-    
+        return variation_df
 
-class Crypto(Asset):
-    """Crypto Assets Class"""
 
-    def __init__(self, asset = True, type = "Variable", name = "Crypto"):
+    def _portfolio_management(self, dataframe):
 
-        # Import config iface
-        from src.iface_config import Config
-        self.config = Config()
+        """Portfolio Management"""
 
-        super().__init__(asset, type, name)
-        self.type = type
-        self.name = name
+        portfolio = rp.Portfolio(returns = dataframe) 
 
-    def __repr__(self):
-        """Basic instance representation"""
-        return "Crypto Assets Class"
+        metodo_mu = 'hist' # method to calculate the future returns based on historical returns
+        metodo_cov = 'hist' # method to calculate the cov matrix based on the historical returns
 
-    def __str__(self):
-        """Print instance representation"""
-        return "Crypto Assets Class"
-    
-    def _get_codes(self) -> list:
-        """Get Crypto Codes"""
+        portfolio.assets_stats(method_mu = metodo_mu, method_cov = metodo_cov, d = 0.94)
 
-        try:
-            tickers = []
-            response = get(self.config.vars.crypto_tickers_url, 
-                           headers={'User-Agent':random.choice(self.config._user_agent)})
+        model='Classic' # Markowitz Classic Model
+        rm = 'MV' # Risk measure: mean-variance
+        obj = 'Sharpe' # Main objective: Maximize Sharpe
 
-            if not response.ok:
-                raise FileNotFoundError("Couldn't request website")
+        wallet = portfolio.optimization(model = model, rm = rm, obj = obj)
 
-            soup = BeautifulSoup(response.content, 'html.parser')
-            crypto_code = soup.find_all("td", class_ = "cmc-table__cell cmc-table__cell--sortable cmc-table__cell--left cmc-table__cell--hide-sm cmc-table__cell--sort-by__symbol")
-            crypto_name = soup.find_all("a", class_ = "cmc-table__column-name--name cmc-link")
-            
-            tickers = [code.text for code in crypto_code]
-            names = [name.text for name in crypto_name]
-
-            coins = dict(zip(tickers, names))
+        top_5_tickers = wallet.sort_values(by='weights', ascending=False).head(5)
+        top_5 = dataframe[top_5_tickers.index.tolist()]
         
-        except Exception as error:
-            raise OSError(error) from error
-
-        return coins
-    
-    def get_dates(self, time):
-        """Get Dates bases 
-        on user input"""
-
-        pattern = "%Y-%m-%d"
-
-        times = {
-            '1 year':timedelta(days=365),
-            '4 years':timedelta(days=365 * 5),
-            '1 month':timedelta(days=30),
-            '6 months':timedelta(days=30*6)
-        }
-
-        date = datetime.now() - times[time]
-
-        return date.strftime(pattern) 
-
-    def get_dataframe(self, company, start_date):
-        """Get dataframe of closing
-         stocks"""
-    
-        try:
-            scraper = CmcScraper(company)
-            dados_btc = scraper.get_dataframe()
-            dados_btc = dados_btc.query("Date >= @start_date")
-
-        except Exception as e:
-            raise (f"An error occurred: {str(e)}")
-        
-        return dados_btc
+        return top_5

@@ -33,10 +33,17 @@ class Quiz:
 
         # Questions and answers
         questions = [
-            "I am willing to take risks in the long term because I believe that in the long run the return will be higher.",
-            "Winning as much as possible is important to me, even if there is a risk of losing part of the capital.",
-            "I prefer to see my investments growing steadily, without highs and lows, even if in the long run I have a lower return.",
-            "Avoiding losses this year is more important than long-term growth. I want to protect my savings in the short term."
+            """I am willing to take risks in the long term because 
+            I believe that in the long run the return will be higher.""",
+
+            """Winning as much as possible is important to me, 
+            even if there is a risk of losing part of the capital.""",
+
+            """I prefer to see my investments growing steadily,
+            without highs and lows, even if in the long run I have a lower return.""",
+
+            """Avoiding losses this year is more important 
+            than long-term growth. I want to protect my savings in the short term."""
         ]
 
         answers = {
@@ -52,7 +59,8 @@ class Quiz:
         profile_counter = 0
         for i, question in enumerate(questions):
             c1.write(question)
-            answer = c1.selectbox('Answer:',answers.keys(), key=i, index=None)
+            answer = c1.selectbox('Answer:',
+                                  answers.keys(), key=i, index=None)
             st.write("#")
             if answer:
                 profile_counter += answers[answer]
@@ -80,7 +88,7 @@ class Quiz:
                                  "B3 Stocks": 10,
                                  "Crypto": 5},
                 "Moderate": {'Renda Fixa': 45,
-                             'Fundos Imbobiliários': 20,
+                             'Fundos Imbobiliários': 25,
                              "B3": 20,
                              "Crypto": 10},
                 "Aggressive": {'Renda Fixa': 25,
@@ -90,7 +98,8 @@ class Quiz:
                 }
         
         # Plotar o gráfico de pizza
-        graph = px.pie(values = data[profile].values(), names = data[profile].keys(), 
+        graph = px.pie(values = data[profile].values(), 
+                       names = data[profile].keys(), 
                        title = f"                                          Wallet Distribuction:\n{profile}")
 
         graph.update_layout(
