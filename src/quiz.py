@@ -102,7 +102,7 @@ class Quiz:
                        names = data[profile].keys(), 
                        title = f"                                          Wallet Distribuction:\n{profile}")
 
-        graph.update_layout(
+        graph.update_qlayout(
             height= 500,
             font_size = 15,
         )

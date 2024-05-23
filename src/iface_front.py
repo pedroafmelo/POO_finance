@@ -1,7 +1,7 @@
 # -- coding: UTF-8 --
 """Import modules"""
 from os import path
-from pandas import DataFrame, set_option
+from pandas import DataFrame
 import yfinance as yf
 import json
 import streamlit as st
@@ -9,11 +9,12 @@ from streamlit_extras.stylable_container import stylable_container
 from streamlit_lottie import st_lottie
 from streamlit_option_menu import option_menu
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 from src.quiz import Quiz
 from src.iface_config import Config
 from src.iface_back import CompoundCalc, InvestRecomend
-from src.fixed import CDB, LCA
+from src.fixed import CDB, LCA, DI
 from src.equity import Stock, Crypto
 
 class FrontEnd:
@@ -30,6 +31,7 @@ class FrontEnd:
         self.quiz = Quiz()
         self.cdb = CDB()
         self.lca = LCA()
+        self.di = DI()
         self.filename = f"{self.config.vars.filename}{self.config.vars.extension}"
 
         self.logo_path = path.join(self.config.project_dir, "img", 
@@ -134,6 +136,7 @@ class FrontEnd:
 
             self.cdbs(c1)
             self.lcas(c2)
+            self.compare_fixed()
 
         elif selector == "Quiz":
             with st.form("Quiz", border = False):
@@ -415,7 +418,7 @@ class FrontEnd:
 
         column.write("#")
 
-        dados = self.cdb.get_dataframe()
+        dados = self.cdb.get_dataframe().drop("code", axis = 1)
 
         column.dataframe(dados, hide_index= True)
 
@@ -423,18 +426,68 @@ class FrontEnd:
     def lcas(self, column):
         """Print the CDBS
         avaiable in Info Money"""
+
+        col1, col2, col3 = st.columns(3)
         
         column.header("LCAS avaiable in XP Investments")
 
         column.write("#")
 
-        dados = self.lca.get_dataframe()
+        dados = self.lca.get_dataframe().drop("code", axis = 1)
 
         column.dataframe(dados, hide_index= True)
+
+        column.write("#")
+        column.write("#")
+
+        col3.link_button("Investir", "https://www.xpi.com.br/")
 
 
     def compare_fixed(self):
         """Compare the selected
         asset with the DI curl"""
 
+        st.write("#")
+
+        cdb_df = self.cdb.get_dataframe()
+        lca_df = self.lca.get_dataframe()
+        di_df = self.di.get_dataframe()
+
+        # c1, c2, c3 = st.columns(3)
+
+        # ticker = c1.selectbox("Choose the Fixed Income Ticker", 
+        #                       self.cdb._get_codes(cdb_df),
+        #                       index = 0)
         
+        # try:
+
+        # st.spinner("Loading...")
+
+        # if len(cdb_df) != 0:
+        
+        #     c1, c2, c3 = st.columns([1, 1, 1])
+        #     c1.write("#")
+        #     c1.write(f"Fixed Income: {ticker}")
+        #     c1.write("#")
+
+        # except Exception as e:
+        #     st.error(f"An error occurred: {str(e)}")
+
+        st.header("DI Future Contracts")
+        st.write("#")
+
+        st.dataframe(di_df, hide_index= True)
+        
+        # st.line_chart(data = di_df,
+        #               x = "Vecto.", y = "Ajuste_Anterior",
+        #               color = "#FF0000")
+        
+        # combined_df = DataFrame({
+        #         f"{ticker}": first_ticker_df['Close'],
+        #         f"{second_ticker_select}": second_ticker_df['Close']
+        #             })
+        
+
+
+        
+

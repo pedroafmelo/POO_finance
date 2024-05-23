@@ -14,6 +14,7 @@ class Variables:
     stock_tickers_url: str
     crypto_tickers_url: str
     cdbs_tickers_url: str
+    future_contracts_url: str
     filename: str
     logo: str
     calc_gif: str
@@ -39,6 +40,7 @@ class Config:
             stock_tickers_url = data.get('stock_tickers_url'),
             crypto_tickers_url = data.get('crypto_tickers_url'),
             cdbs_tickers_url = data.get('cdbs_tickers_url'),
+            future_contracts_url = data.get('future_contracts_url'),
             filename = data.get('file_name'),
             logo = data.get('logo'),
             calc_gif = data.get('calc_gif'),

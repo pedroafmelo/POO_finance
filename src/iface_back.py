@@ -130,37 +130,41 @@ class InvestRecomend:
         inicial_date = inicial_date.strftime(pattern) 
         final_date = datetime.now()
 
-        # try:
-        tickers_yahoo = [ticker + '.SA' for ticker in _self.tickers]
-        dados_tickers = web.get_data_yahoo(tickers_yahoo, 
-                                        start = inicial_date, end = final_date)
-        variation_df = dados_tickers['Adj Close'].pct_change()
-        variation_df = variation_df[1:].dropna(axis = 1)
+        try:
+            tickers_yahoo = [ticker + '.SA' for ticker in _self.tickers]
+            dados_tickers = web.get_data_yahoo(tickers_yahoo, 
+                                            start = inicial_date, end = final_date)
+            variation_df = dados_tickers['Adj Close'].pct_change()
+            variation_df = variation_df[1:].dropna(axis = 1)
 
-        # except NameError:
-        #     raise OSError("Could not download Tickers")
+        except NameError:
+            raise OSError("Could not download Tickers")
         
         return variation_df
 
-
-    def _portfolio_management(self, dataframe):
+    @st.cache_data
+    def _portfolio_management(_self, dataframe):
 
         """Portfolio Management"""
 
-        portfolio = rp.Portfolio(returns = dataframe) 
+        try:
+            portfolio = rp.Portfolio(returns = dataframe) 
 
-        metodo_mu = 'hist' # method to calculate the future returns based on historical returns
-        metodo_cov = 'hist' # method to calculate the cov matrix based on the historical returns
+            metodo_mu = 'hist' # method to calculate the future returns based on historical returns
+            metodo_cov = 'hist' # method to calculate the cov matrix based on the historical returns
 
-        portfolio.assets_stats(method_mu = metodo_mu, method_cov = metodo_cov, d = 0.94)
+            portfolio.assets_stats(method_mu = metodo_mu, method_cov = metodo_cov, d = 0.94)
 
-        model='Classic' # Markowitz Classic Model
-        rm = 'MV' # Risk measure: mean-variance
-        obj = 'Sharpe' # Main objective: Maximize Sharpe
+            model='Classic' # Markowitz Classic Model
+            rm = 'MV' # Risk measure: mean-variance
+            obj = 'Sharpe' # Main objective: Maximize Sharpe
 
-        wallet = portfolio.optimization(model = model, rm = rm, obj = obj)
+            wallet = portfolio.optimization(model = model, rm = rm, obj = obj)
 
-        top_5_tickers = wallet.sort_values(by='weights', ascending=False).head(5)
-        top_5 = dataframe[top_5_tickers.index.tolist()]
+            top_5_tickers = wallet.sort_values(by='weights', ascending=False).head(5)
+            top_5 = dataframe[top_5_tickers.index.tolist()]
+
+        except Exception as error:
+            raise OSError from error
         
         return top_5

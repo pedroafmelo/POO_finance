@@ -120,9 +120,8 @@ class Crypto(Equity):
                 raise FileNotFoundError("Couldn't request website")
 
             soup = BeautifulSoup(response.content, 'html.parser')
-            crypto_code = soup.find_all("td", 
-                                        class_ = """cmc-table__cell cmc-table__cell--sortable 
-                                        cmc-table__cell--left cmc-table__cell--hide-sm cmc-table__cell--sort-by__symbol""")
+            crypto_code = soup.find_all("a", 
+                                        class_ = "cmc-table__column-name--symbol cmc-link")
             crypto_name = soup.find_all("a", 
                                         class_ = "cmc-table__column-name--name cmc-link")
             

@@ -11,3 +11,4 @@ cryptocmd
 plotly-express
 pandas_datareader
 selenium
+riskfolio
