@@ -10,4 +10,4 @@ requests==2.31.0
 plotly-express
 pandas_datareader
 selenium
-riskfolio
+Riskfolio-Lib
