@@ -5,7 +5,6 @@ from random import choice
 import streamlit as st
 import yfinance as yf
 from bs4 import BeautifulSoup
-from cryptocmd import CmcScraper
 from requests import get
 
 from src.assets import Equity

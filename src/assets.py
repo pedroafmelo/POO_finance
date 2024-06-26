@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 import streamlit as st
 import yfinance as yf
 from bs4 import BeautifulSoup
-from cryptocmd import CmcScraper
 from pandas import read_html
 from requests import get
 from selenium import webdriver
@@ -99,7 +98,7 @@ class Fixed(Asset, ABC):
 
     def __str__(self):
         """Print instance representation"""
-        return "Crypto Assets Class"
+        return "Fixed Assets Class"
     
     def __eq__(self, other):
         if self.type == other.type:
