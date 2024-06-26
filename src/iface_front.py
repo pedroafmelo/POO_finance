@@ -119,13 +119,13 @@ class FrontEnd:
             c1.header("Assets closing prices historic")
             c1.write('#')
             c4.write("#")
-            crypto = c4.toggle("Crypto")
-            if not crypto: 
-                c1.subheader("Stocks")
-                self.stock_hist_closing()
-            else:
-                c1.subheader("Crypto")
-                self.crypto_hist_closing()
+            #crypto = c4.toggle("Crypto")
+            #if not crypto: 
+            c1.subheader("Stocks")
+            self.stock_hist_closing()
+            # else:
+                # c1.subheader("Crypto")
+                # self.crypto_hist_closing()
 
         elif selector == "Fixed Income":
             c1, c2 = st.columns(2)
@@ -136,7 +136,7 @@ class FrontEnd:
 
             self.cdbs(c1)
             self.lcas(c2)
-            self.compare_fixed()
+            #self.compare_fixed()
 
         elif selector == "Quiz":
             with st.form("Quiz", border = False):
@@ -393,21 +393,16 @@ class FrontEnd:
 
             ticker_df = self.crypto.get_dataframe(ticker, time)
 
-            st.spinner("Loading...")
-
-            if len(ticker_df) != 0:
-         
-                c1, c2, c3 = st.columns([1, 1, 1])
-                c1.write("#")
-                c1.write(f"Coin: {self.crypto._get_codes()[ticker]}")
-                c1.write("#")
+            with st.spinner("Loading..."):
+                if len(ticker_df) != 0:
+                    c1, c2, c3 = st.columns([1, 1, 1])
+                    c1.write("#")
+                    c1.write(f"Coin: {self.crypto._get_codes()[ticker]}")
+                    c1.write("#")
+                    st.line_chart(data=ticker_df.set_index("Date")["Close"])
 
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
-        
-        st.line_chart(data = ticker_df,
-                      x = "Date", y = "Close",
-                      color = "#FF0000")
         
 
     def cdbs(self, column):
@@ -486,8 +481,3 @@ class FrontEnd:
         #         f"{ticker}": first_ticker_df['Close'],
         #         f"{second_ticker_select}": second_ticker_df['Close']
         #             })
-        
-
-
-        
-
